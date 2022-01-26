@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+    <title>code_nvwa</title>
+    <meta charset="UTF-8" content="width=decice-with,uer-scalable=no">
+</head>
+<body>
+    long<input type="number" id="length" value="10">
+    size<input type="number" id="size" value="50">
+    <input type="button" value="sure" onclick="tabnumber(document.getElementById('length').value,document.getElementById('size').value)">
+    <input type="color" id="color">
+    <input type="button" value="produce" onclick="bepng()">
+    <span id="text"></span>
+    <canvas id="canvas" width="0" height="0" style="border:1px solid #d3d3d3"></canvas>
+
+    <table id="tab" border="1" style="border-collapse: collapse;">
+    </table>
+    </body>
+<script>
+    let tab=document.getElementById('tab');
+    let num;
+    function tabnumber(number,size){
+        let text="";
+        num = parseInt(number);
+        
+        for (let b = 0; b <number; b++){
+            text=text+"<tr>";
+            for (let a = 0; a <number; a++){
+                text=text+"<td width='"+size+"' height='"+size+"'></td>";
+            }
+            text=text+"</tr>";
+        }
+        tab.innerHTML = text;
+        tabCell();
+    }
+    function tabCell(){
+        let rows=tab.rows;
+        let rlen=rows.length;
+        for (let i = 0; i <rlen; i++) {
+            let cells=rows[i].cells;
+            for (let j = 0; j < cells.length; j++) {
+                cells[j].onclick=function(){
+                    if (this.style.background=='') {
+                        this.style.background=document.getElementById('color').value;
+                    }else{
+                        this.style.background='';
+                    }
+                }
+            }
+        }
+    }
+    function bepng(){
+        let bur = new Array();
+        let rows=tab.rows;
+        let rlen=rows.length;
+        for (let i = 0; i <rlen; i++) {
+            let cells=rows[i].cells;
+            for (let j = 0; j < cells.length; j++) {
+                let str=cells[j].style.background;
+                if(str==""){
+                    str=",,";
+                    bur=bur.concat(str.split(","),0);
+                }else{
+                    str=str.slice(4,-1);
+                    bur=bur.concat(str.split(","),255);
+                } 
+            }
+        }
+        bur=new Uint8ClampedArray(bur.map(Number));
+        let cy=document.getElementById('canvas');
+        cy.width=num;
+        cy.height=num;
+        let c=cy.getContext("2d");  
+        c.putImageData(new ImageData(bur,num,num),0,0);
+        document.getElementById('text').innerHTML="the image："
+    }
+    tabnumber(document.getElementById('length').value,document.getElementById('size').value)
+</script>
+</html>
